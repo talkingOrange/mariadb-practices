@@ -41,7 +41,8 @@ WHERE to_date = '9999-01-01';
 -- 문제7. (X)
 -- 전체 부서를 출력하려고 합니다. 순서는 부서이름이 긴 순서대로 출력해 보세요.
 
-select first_name, length(first_name) from employees;
+select dept_name, length(dept_name) from departments
+order by length(dept_name) desc;
 
 
 -- 문제8.
@@ -52,7 +53,8 @@ where salary >= 120000 AND to_date='9999-01-01';
 
 -- 문제9.
 -- 어떤 직책들이 있나요? 중복 없이 이름이 긴 순서대로 출력해 보세요.
-
+select distinct title, length(title) from titles
+order by length(title) desc;
 
 -- 문제10
 -- 현재 Enginner 직책의 사원은 총 몇 명입니까? (to_date AND __)
