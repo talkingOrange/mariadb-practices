@@ -70,7 +70,7 @@ select a.emp_no, a.first_name, b.dept_name
    and c.to_date = '9999-01-01';
 
 -- 실습문제2
--- 현재, 직책별 평균연봉과 직원수를 구하되 직책별 직원수가 100명 이상인 직책만 출력하세요.alter
+-- 현재, 직책별 평균연봉과 직원수를 구하되 직책별 직원수가 100명 이상인 직책만 출력하세요.
 -- 직책, 평균연봉, 직원만 출력
   select title, avg(salary), count(*)
     from titles a, salaries b
