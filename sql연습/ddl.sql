@@ -35,6 +35,55 @@ create table member(
  
  desc member;
  
- --
- -- dml
- --
+--
+-- dml
+--
+
+-- insert
+insert
+  into member
+values (null, 'kickscar@gmail.com', password('1234'), '안대혁', '개발팀', null);
+select * from member; 
+
+insert
+  into member(no, email, password, name, dept, self_intro)
+values (null, 'kickscar2@gmail.com', password('1234'), '안대혁2', '개발팀2', null);
+select * from member;
+ 
+insert
+  into member(email, password, name, dept)
+values ('kickscar3@gmail.com', password('1234'), '안대혁3', '개발팀3');
+select * from member;
+
+insert
+  into member(email, name, dept, password)
+values ('kickscar4@gmail.com', '안대혁4', '개발팀4', password('1234'));
+select * from member;
+
+-- update
+update member
+   set email='kixxcar@gmail.com', name='킥스카'
+ where no = 4;
+select * from member;
+
+-- delete
+delete
+  from member
+ where no = 4;
+select * from member;
+ 
+select @@autocommit from dual;
+
+-- transaction begin
+set autocommit = 0;
+select @@autocommit from dual;
+
+insert
+  into member(email, name, dept, password)
+values ('kickscar4@gmail.com', '안대혁4', '개발팀4', password('1234'));
+
+select no, email, dept from member;
+
+commit;
+
+select no, email, dept from member;
