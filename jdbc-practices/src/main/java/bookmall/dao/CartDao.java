@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import bookmall.vo.CartVo;
+import hr.dao.vo.EmployeesVo;
 
 
 public class CartDao {
@@ -21,12 +22,10 @@ public class CartDao {
 		ResultSet rs = null;
 
 		try {
-			conn = getConnection();
+			conn = ConnectionUtil.getConnection();
 
 			// 3. SQL 준비
-			String sql = "select *"
-					+ " from cart a, book b"
-					+ " where a.book_no = b.book_no";
+			String sql = "select * from cart";
 			pstmt = conn.prepareStatement(sql);
 
 			// 5. SQL 실행
@@ -35,18 +34,15 @@ public class CartDao {
 			// 6. 결과 처리
 			while (rs.next()) {
 				int count = rs.getInt(1);
-				int memberNo = rs.getInt(2);
-				int bookNo = rs.getInt(3);
-				String title = rs.getString(5);
-				int price = rs.getInt(6);
+				Long memberNo = rs.getLong(2);
+				Long bookNo = rs.getLong(3);
+		
 				
 				CartVo vo = new CartVo();
 				
 				vo.setCount(count);
 				vo.setMemberNo(memberNo);
 				vo.setBookNo(bookNo);
-			    vo.setTitle(title);
-			    vo.setPrice(price);
 
 				result.add(vo);
 			}
@@ -79,15 +75,15 @@ public class CartDao {
 		PreparedStatement pstmt = null;
 
 		try {
-			conn = getConnection();
+			conn = ConnectionUtil.getConnection();
 
 			// 3. SQL 준비
 			String sql = "INSERT INTO cart VALUES (?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setInt(1, vo.getCount());
-			pstmt.setInt(2, vo.getMemberNo());
-			pstmt.setInt(3, vo.getBookNo());
+			pstmt.setLong(2, vo.getMemberNo());
+			pstmt.setLong(3, vo.getBookNo());
 
 			// 5. SQL 실행
 			pstmt.executeQuery();
@@ -110,19 +106,19 @@ public class CartDao {
 		}
 	}
 
-	public void delete(int memberNo, int bookNo) {
+	public void delete(Long memberNo, Long bookNo) {
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 
 		try {
-			conn = getConnection();
+			conn = ConnectionUtil.getConnection();
 
 			String sql = "delete from cart where member_no=? and book_no=?";
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setInt(1, memberNo);
-			pstmt.setInt(2, bookNo);
+			pstmt.setLong(1, memberNo);
+			pstmt.setLong(2, bookNo);
 
 			pstmt.executeQuery();
 
@@ -141,20 +137,6 @@ public class CartDao {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	private Connection getConnection() throws SQLException {
-		Connection conn = null;
-		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-			String url = "jdbc:mariadb://192.168.0.178:3307/bookmall?charset=utf8";
-			conn = DriverManager.getConnection(url, "bookmall", "bookmall");
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
-		}
-
-		return conn;
-
 	}
 
 }

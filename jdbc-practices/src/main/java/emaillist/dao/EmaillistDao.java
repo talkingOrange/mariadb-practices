@@ -31,12 +31,18 @@ public class EmaillistDao {
 
 			// 6. 결과 처리
 			while (rs.next()) {
-				Long empNo = rs.getLong(1);
+				Long no = rs.getLong(1);
 				String firstName = rs.getString(2);
 				String lastName = rs.getString(3);
 				String email = rs.getString(4);
 
-				System.out.println(empNo + ":" + firstName + ":" + lastName + ":" + email);
+				EmaillistVo vo = new EmaillistVo();
+				vo.setNo(no);
+				vo.setFirstName(firstName);
+				vo.setLastName(lastName);
+				vo.setEmail(email);
+
+				result.add(vo);
 			}
 
 		} catch (SQLException e) {
@@ -110,7 +116,7 @@ public class EmaillistDao {
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1, email);
-			
+
 			pstmt.executeQuery();
 
 		} catch (SQLException e) {

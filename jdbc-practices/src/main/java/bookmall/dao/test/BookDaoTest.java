@@ -10,7 +10,7 @@ public class BookDaoTest {
 		BookVo vo = new BookVo();
 		vo.setTitle("이것이 자바다");
 		vo.setPrice(30000);
-		vo.setCategoryNo(2);
+		vo.setCategoryNo(2L);
 
 		System.out.println("===FindAll===");
 		testFindAll();

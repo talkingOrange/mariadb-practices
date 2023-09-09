@@ -10,8 +10,8 @@ public class CartDaoTest {
 	public static void main(String[] args) {
 		CartVo vo = new CartVo();
 		vo.setCount(2);
-		vo.setMemberNo(6);
-		vo.setBookNo(22);
+		vo.setMemberNo(6L);
+		vo.setBookNo(22L);
 
 		System.out.println("===FindAll===");
 		testFindAll();
@@ -21,11 +21,11 @@ public class CartDaoTest {
 		testFindAll();
 		
 		System.out.println("===Delete===");
-		testDeleteByPasswd(6, 22);
+		testDeleteByPasswd(6L, 22L);
 		testFindAll();
 	}
 
-	private static void testDeleteByPasswd(int memberNo, int bookNo) {
+	private static void testDeleteByPasswd(Long memberNo, Long bookNo) {
 		new CartDao().delete(memberNo, bookNo);
 	}
 

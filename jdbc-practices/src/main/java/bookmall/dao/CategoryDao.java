@@ -20,7 +20,7 @@ public class CategoryDao {public List<CategoryVo> findAll() {
 	ResultSet rs = null;
 
 	try {
-		conn = getConnection();
+		conn = ConnectionUtil.getConnection();
 
 		// 3. SQL 준비
 		String sql = "select name from category order by category_no asc";
@@ -67,7 +67,7 @@ public void insert(CategoryVo vo) {
 	PreparedStatement pstmt = null;
 
 	try {
-		conn = getConnection();
+		conn = ConnectionUtil.getConnection();
 
 		// 3. SQL 준비
 		String sql = "INSERT INTO category VALUES (null, ?)";
@@ -102,7 +102,7 @@ public void delete(String name) {
 	PreparedStatement pstmt = null;
 
 	try {
-		conn = getConnection();
+		conn = ConnectionUtil.getConnection();
 
 		String sql = "delete from category where name=?";
 		pstmt = conn.prepareStatement(sql);
@@ -128,18 +128,5 @@ public void delete(String name) {
 	}
 }
 
-private Connection getConnection() throws SQLException {
-	Connection conn = null;
-	try {
-		Class.forName("org.mariadb.jdbc.Driver");
-		String url = "jdbc:mariadb://192.168.0.178:3307/bookmall?charset=utf8";
-		conn = DriverManager.getConnection(url, "bookmall", "bookmall");
-	} catch (ClassNotFoundException e) {
-		System.out.println("드라이버 로딩 실패:" + e);
-	}
-
-	return conn;
-
-}
 
 }

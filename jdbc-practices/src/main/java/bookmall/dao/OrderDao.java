@@ -8,13 +8,12 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-import bookmall.vo.BookVo;
+import bookmall.vo.OrderVo;
 
-public class BookDao {
-	
-	public List<BookVo> findAll() {
+public class OrderDao {
+	public List<OrderVo> findAll() {
 
-		List<BookVo> result = new ArrayList<>();
+		List<OrderVo> result = new ArrayList<>();
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -24,7 +23,7 @@ public class BookDao {
 			conn = ConnectionUtil.getConnection();
 
 			// 3. SQL 준비
-			String sql = "select title, price from book order by book_no asc";
+			String sql = "select * from orders";
 			pstmt = conn.prepareStatement(sql);
 
 			// 5. SQL 실행
@@ -32,12 +31,18 @@ public class BookDao {
 
 			// 6. 결과 처리
 			while (rs.next()) {
-				String title = rs.getString(1);
-				int price = rs.getInt(2);
+				Long no = rs.getLong(1);
+				String orderNumber = rs.getString(2);
+				int orderPrice = rs.getInt(3);
+				String address = rs.getString(4);
+				Long memberNo = rs.getLong(5);
 
-				BookVo vo = new BookVo();
-				vo.setTitle(title);
-				vo.setPrice(price);
+				OrderVo vo = new OrderVo();
+				vo.setNo(no);
+				vo.setOrderNumber(orderNumber);
+				vo.setOrderPrice(orderPrice);
+				vo.setAddress(address);
+				vo.setMemberNo(memberNo);
 
 				result.add(vo);
 			}
@@ -46,7 +51,6 @@ public class BookDao {
 			System.out.println("error:" + e);
 		} finally {
 			try {
-				// 6. 자원정리
 				if (rs != null) {
 					rs.close();
 				}
@@ -61,25 +65,39 @@ public class BookDao {
 			}
 		}
 		return result;
+
 	}
 
-	public String findBookTitleByNo(Long i) {
+	public List<OrderVo> findOrderBookAll() {
+
+		List<OrderVo> result = new ArrayList<>();
+
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		String name = null;
+
 		try {
 			conn = ConnectionUtil.getConnection();
 
-			String sql = "select title from book where book_no = ?";
+			// 3. SQL 준비
+			String sql = "select * from order_book";
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setString(1, Long.toString(i));
-
-			pstmt.executeQuery();
+			// 5. SQL 실행
 			rs = pstmt.executeQuery();
+
+			// 6. 결과 처리
 			while (rs.next()) {
-				name = rs.getString("title");
+				Long no = rs.getLong(1);
+				Long bookNo = rs.getLong(2);
+				int count = rs.getInt(3);
+				
+				OrderVo vo = new OrderVo();
+				vo.setNo(no);
+				vo.setBookNo(bookNo);
+				vo.setCount(count);
+				
+				result.add(vo);
 			}
 
 		} catch (SQLException e) {
@@ -99,18 +117,19 @@ public class BookDao {
 				e.printStackTrace();
 			}
 		}
-		return name;
-	}
+		return result;
 
-	public int findBookPriceByNo(Long no) {
+	}
+	
+	public Long findMemberNoByNo(Long no) {
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
-		int price = 0;
+		Long memberNo = 0L;
 		try {
 			conn = ConnectionUtil.getConnection();
 
-			String sql = "select price from book where book_no = ?";
+			String sql = "select member_no from orders where order_no= ?";
 			pstmt = conn.prepareStatement(sql);
 
 			pstmt.setString(1, Long.toString(no));
@@ -118,7 +137,7 @@ public class BookDao {
 			pstmt.executeQuery();
 			rs = pstmt.executeQuery();
 			while (rs.next()) {
-				price = rs.getInt("price");
+				memberNo = rs.getLong("member_no");
 			}
 
 		} catch (SQLException e) {
@@ -138,11 +157,10 @@ public class BookDao {
 				e.printStackTrace();
 			}
 		}
-		return price;
-
+		return memberNo;
 	}
-
-	public void insert(BookVo vo) {
+	
+	public void insert(OrderVo vo) {
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -151,12 +169,13 @@ public class BookDao {
 			conn = ConnectionUtil.getConnection();
 
 			// 3. SQL 준비
-			String sql = "INSERT INTO book VALUES (null, ?, ?, ?)";
+			String sql = "INSERT INTO orders VALUES (null, ?, ?, ?, ?)";
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setString(1, vo.getTitle());
-			pstmt.setInt(2, vo.getPrice());
-			pstmt.setLong(3, vo.getCategoryNo());
+			pstmt.setString(1, vo.getOrderNumber());
+			pstmt.setInt(2, vo.getOrderPrice());
+			pstmt.setString(3, vo.getAddress());
+			pstmt.setLong(4, vo.getMemberNo());
 
 			// 5. SQL 실행
 			pstmt.executeQuery();
@@ -179,7 +198,7 @@ public class BookDao {
 		}
 	}
 
-	public void delete(String title) {
+	public void orderBookInsert(OrderVo vo) {
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -187,10 +206,47 @@ public class BookDao {
 		try {
 			conn = ConnectionUtil.getConnection();
 
-			String sql = "delete from book where title=?";
+			// 3. SQL 준비
+			String sql = "INSERT INTO order_book VALUES (?, ?,  ?)";
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setString(1, title);
+			pstmt.setLong(1, vo.getNo());
+			pstmt.setLong(2, vo.getBookNo());
+			pstmt.setInt(3, vo.getCount());
+
+			// 5. SQL 실행
+			pstmt.executeQuery();
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			try {
+				// 6. 자원정리
+
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+
+	public void delete(String orderNumber) {
+
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = ConnectionUtil.getConnection();
+
+			String sql = "delete from orders where order_number=?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, orderNumber);
 
 			pstmt.executeQuery();
 
@@ -210,7 +266,38 @@ public class BookDao {
 			}
 		}
 	}
+	
+	public void orderBookdelete(Long orderNo) {
 
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+
+		try {
+			conn = ConnectionUtil.getConnection();
+
+			String sql = "delete from order_book where order_no=?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setLong(1, orderNo);
+
+			pstmt.executeQuery();
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			try {
+
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 
 }

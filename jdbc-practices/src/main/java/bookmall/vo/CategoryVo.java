@@ -8,9 +8,8 @@ public class CategoryVo {
 	public CategoryVo() {
 	}
 
-	public CategoryVo(Long no, String name) {
+	public CategoryVo(String name) {
 		super();
-		this.no = no;
 		this.name = name;
 	}
 

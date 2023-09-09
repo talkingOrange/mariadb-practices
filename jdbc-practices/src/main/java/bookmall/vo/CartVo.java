@@ -2,24 +2,18 @@ package bookmall.vo;
 
 public class CartVo {
 	private int count;
-	private int memberNo;
-	private int bookNo;
-	private String title;
-	private int price;
-	
+	private Long memberNo;
+	private Long bookNo;
+
 	public CartVo() {
 	}
 
-	public CartVo(int count, int memberNo, int bookNo, String title, int price) {
+	public CartVo(int count, Long memberNo, Long bookNo) {
 		super();
 		this.count = count;
 		this.memberNo = memberNo;
 		this.bookNo = bookNo;
-		this.title = title;
-		this.price = price;
 	}
-
-
 
 	public int getCount() {
 		return count;
@@ -29,50 +23,25 @@ public class CartVo {
 		this.count = count;
 	}
 
-	public int getMemberNo() {
+	public Long getMemberNo() {
 		return memberNo;
 	}
 
-	public void setMemberNo(int memberNo) {
+	public void setMemberNo(Long memberNo) {
 		this.memberNo = memberNo;
 	}
 
-	public int getBookNo() {
+	public Long getBookNo() {
 		return bookNo;
 	}
 
-	public void setBookNo(int bookNo) {
+	public void setBookNo(Long bookNo) {
 		this.bookNo = bookNo;
 	}
 
-	public String getTitle() {
-		return title;
-	}
-
-
-
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-
-
-	public int getPrice() {
-		return price;
-	}
-
-
-
-	public void setPrice(int price) {
-		this.price = price;
-	}
-
-
-
 	@Override
 	public String toString() {
-		return "CartVo [count=" + count + ", memberNo=" + memberNo + ", bookNo=" + bookNo + ", title=" + title
-				+ ", price=" + price + "]";
+		return "CartVo [count=" + count + ", memberNo=" + memberNo + ", bookNo=" + bookNo + "]";
 	}
-	
+
 }

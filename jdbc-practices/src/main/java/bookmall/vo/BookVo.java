@@ -1,28 +1,26 @@
 package bookmall.vo;
 
 public class BookVo {
-	// title, price
-	private int no;
+	private Long no;
 	private String title;
 	private int price;
-	private int categoryNo;
+	private Long categoryNo;
 
 	public BookVo() {
 	}
 
-	public BookVo(int no, String title, int price, int categoryNo) {
+	public BookVo(String title, int price, Long categoryNo) {
 		super();
-		this.no = no;
 		this.title = title;
 		this.price = price;
 		this.categoryNo = categoryNo;
 	}
 
-	public int getNo() {
+	public Long getNo() {
 		return no;
 	}
 
-	public void setNo(int no) {
+	public void setNo(Long no) {
 		this.no = no;
 	}
 
@@ -42,11 +40,11 @@ public class BookVo {
 		this.price = price;
 	}
 
-	public int getCategoryNo() {
+	public Long getCategoryNo() {
 		return categoryNo;
 	}
 
-	public void setCategoryNo(int categoryNo) {
+	public void setCategoryNo(Long categoryNo) {
 		this.categoryNo = categoryNo;
 	}
 

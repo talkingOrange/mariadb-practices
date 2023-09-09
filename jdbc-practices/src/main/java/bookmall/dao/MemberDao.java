@@ -20,10 +20,10 @@ public class MemberDao {
 		ResultSet rs = null;
 
 		try {
-			conn = getConnection();
+			conn = ConnectionUtil.getConnection();
 
 			// 3. SQL 준비
-			String sql = "select name, tel, email, passwd from member order by member_no desc";
+			String sql = "select name, tel, email, passwd from member order by member_no";
 			pstmt = conn.prepareStatement(sql);
 
 			// 5. SQL 실행
@@ -73,7 +73,7 @@ public class MemberDao {
 		PreparedStatement pstmt = null;
 
 		try {
-			conn = getConnection();
+			conn = ConnectionUtil.getConnection();
 
 			// 3. SQL 준비
 			String sql = "INSERT INTO member VALUES (null, ?, ?,?, ? )";
@@ -105,18 +105,18 @@ public class MemberDao {
 		}
 	}
 
-	public void delete(String email) {
+	public void delete(String passwd) {
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 
 		try {
-			conn = getConnection();
-
+			conn = ConnectionUtil.getConnection();
+			
 			String sql = "delete from member where passwd=?";
 			pstmt = conn.prepareStatement(sql);
 
-			pstmt.setString(1, email);
+			pstmt.setString(1, passwd);
 
 			pstmt.executeQuery();
 
@@ -136,18 +136,83 @@ public class MemberDao {
 			}
 		}
 	}
-
-	private Connection getConnection() throws SQLException {
+	
+	public String findMemberNameByNo(Long no) {
 		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String name = null;
 		try {
-			Class.forName("org.mariadb.jdbc.Driver");
-			String url = "jdbc:mariadb://192.168.0.178:3307/bookmall?charset=utf8";
-			conn = DriverManager.getConnection(url, "bookmall", "bookmall");
-		} catch (ClassNotFoundException e) {
-			System.out.println("드라이버 로딩 실패:" + e);
+			conn = ConnectionUtil.getConnection();
+
+			String sql = "select name from member where member_no = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, Long.toString(no));
+
+			pstmt.executeQuery();
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				name = rs.getString("name");
+			}
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
 		}
-
-		return conn;
-
+		return name;
 	}
+
+	public String findMemberEmailByNo(Long no) {
+		Connection conn = null;
+		PreparedStatement pstmt = null;
+		ResultSet rs = null;
+		String email = null;
+		try {
+			conn = ConnectionUtil.getConnection();
+
+			String sql = "select email from member where member_no = ?";
+			pstmt = conn.prepareStatement(sql);
+
+			pstmt.setString(1, Long.toString(no));
+
+			pstmt.executeQuery();
+			rs = pstmt.executeQuery();
+			while (rs.next()) {
+				email = rs.getString("email");
+			}
+
+		} catch (SQLException e) {
+			System.out.println("error:" + e);
+		} finally {
+			try {
+				if (rs != null) {
+					rs.close();
+				}
+				if (pstmt != null) {
+					pstmt.close();
+				}
+				if (conn != null) {
+					conn.close();
+				}
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return email;
+	}
+
 }
