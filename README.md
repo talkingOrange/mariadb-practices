@@ -3,6 +3,7 @@
 
 ### 👉 DDL 실행
 
+
 ![image](https://github.com/talkingOrange/mariadb-practices/assets/88815795/d103aa9c-0432-412d-98fb-5c2fbbe0c661)
 
 
